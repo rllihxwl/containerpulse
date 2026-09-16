@@ -1,7 +1,11 @@
 const fastify = require('fastify')({ logger: true })
 
-fastify.get('/', async (request, reply) => {
+fastify.get('/', async () => {
   return { hello: 'world' }
+})
+
+fastify.get('/health', async () => {
+  return { status: 'ok' }
 })
 
 const start = async () => {
