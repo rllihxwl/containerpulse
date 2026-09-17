@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090b0e">
+
+  <title>ContainerPulse</title>
+
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+
+<body>
+  <div class="shell">
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">CP</div>
+
+        <div>
+          <div class="brand-name">ContainerPulse</div>
+          <div class="brand-subtitle">Deployment observability</div>
+        </div>
+      </div>
+
+      <div class="overall-status">
+        <span class="status-dot loading" id="top-status-dot"></span>
+        <span id="top-status">Checking service...</span>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="hero">
+        <div>
+          <div class="eyebrow" id="service-type">
+            CHECKING ENVIRONMENT
+          </div>
+
+          <div class="hero-status">
+            <span class="status-dot large loading" id="hero-status-dot"></span>
+            <h1 id="service-status">Checking service</h1>
+          </div>
+
+          <p id="service-description">
+            Loading runtime and deployment information.
+          </p>
+        </div>
+      </section>
+
+      <section class="grid primary-grid">
+
+        <article class="card">
+          <div class="card-label">Version</div>
+          <div class="card-value skeleton" id="version">Loading</div>
+          <div class="card-meta">Application release</div>
+        </article>
+
+        <article class="card">
+          <div class="card-label">Environment</div>
+          <div class="card-value skeleton" id="environment">Loading</div>
+          <div class="card-meta">Current runtime mode</div>
+        </article>
+
+        <article class="card">
+          <div class="card-label">Uptime</div>
+          <div class="card-value skeleton" id="uptime">Loading</div>
+          <div class="card-meta">Since process start</div>
+        </article>
+
+        <article class="card">
+          <div class="card-label">Memory</div>
+          <div class="card-value skeleton" id="memory">Loading</div>
+          <div class="card-meta">Process RSS</div>
+        </article>
+
+      </section>
+
+      <section class="panel metrics-panel">
+
+        <div class="panel-header">
+          <div>
+            <div class="eyebrow">OBSERVABILITY</div>
+            <h2>Live traffic</h2>
+          </div>
+
+          <span class="badge neutral" id="metrics-window">
+            Rolling 5 min
+          </span>
+        </div>
+
+        <div class="metrics-grid">
+
+          <div class="metric">
+            <span class="metric-label">Requests</span>
+            <strong class="metric-value skeleton" id="requests">0</strong>
+            <span class="metric-meta" id="rpm">0 req/min</span>
+          </div>
+
+          <div class="metric">
+            <span class="metric-label">Error rate</span>
+            <strong class="metric-value skeleton" id="error-rate">0%</strong>
+            <span class="metric-meta">HTTP 5xx responses</span>
+          </div>
+
+          <div class="metric">
+            <span class="metric-label">Avg latency</span>
+            <strong class="metric-value skeleton" id="avg-latency">0 ms</strong>
+            <span class="metric-meta">Rolling average</span>
+          </div>
+
+          <div class="metric">
+            <span class="metric-label">P95 latency</span>
+            <strong class="metric-value skeleton" id="p95-latency">0 ms</strong>
+            <span class="metric-meta">95th percentile</span>
+          </div>
+
+        </div>
+
+        <div class="traffic-chart">
+
+          <div class="traffic-chart-header">
+            <div>
+              <strong>Request activity</strong>
+              <span>Last 5 minutes</span>
+            </div>
+
+            <span id="traffic-peak">Peak 0 / 10s</span>
+          </div>
+
+          <div class="chart-container">
+            <svg
+              id="activity-chart"
+              viewBox="0 0 100 32"
+              preserveAspectRatio="none"
+              aria-label="Request activity"
+            >
+              <line
+                class="chart-grid-line"
+                x1="0"
+                y1="31"
+                x2="100"
+                y2="31"
+              />
+
+              <path id="activity-area"></path>
+
+              <polyline
+                id="activity-line"
+                points=""
+              ></polyline>
+            </svg>
+          </div>
+
+          <div class="chart-axis">
+            <span>5 min ago</span>
+            <span>now</span>
+          </div>
+
+        </div>
+
+      </section>
+
+      <section class="panel">
+
+        <div class="panel-header">
+          <div>
+            <div class="eyebrow">CURRENT DEPLOYMENT</div>
+            <h2>Release information</h2>
+          </div>
+
+          <span class="badge neutral" id="release-status">
+            Checking
+          </span>
+        </div>
+
+        <div class="details">
+
+          <div class="detail">
+            <span>Commit</span>
+
+            <div class="copy-value">
+              <code class="skeleton" id="commit">Loading</code>
+
+              <button
+                class="copy-button"
+                data-copy-target="commit"
+                type="button"
+                disabled
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+
+          <div class="detail">
+            <span>Image</span>
+
+            <div class="copy-value">
+              <code class="skeleton" id="image">Loading</code>
+
+              <button
+                class="copy-button"
+                data-copy-target="image"
+                type="button"
+                disabled
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+
+          <div class="detail">
+            <span>Build date</span>
+            <strong class="skeleton" id="build-date">Loading</strong>
+          </div>
+
+          <div class="detail">
+            <span>Runtime</span>
+            <strong class="skeleton" id="runtime">Loading</strong>
+          </div>
+
+          <div class="detail">
+            <span>Platform</span>
+            <strong class="skeleton" id="platform">Loading</strong>
+          </div>
+
+          <div class="detail">
+            <span>Last checked</span>
+
+            <div class="refresh-group">
+              <strong class="skeleton" id="checked">Loading</strong>
+
+              <button
+                id="refresh-button"
+                class="refresh-button"
+                type="button"
+              >
+                Refresh
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <section class="panel">
+
+        <div class="panel-header">
+          <div>
+            <div class="eyebrow">SERVICE CHECKS</div>
+            <h2>Endpoints</h2>
+          </div>
+        </div>
+
+        <div class="checks">
+
+          <a href="/healthz" class="check">
+            <div>
+              <span class="check-name">Liveness</span>
+              <span class="check-path">/healthz</span>
+            </div>
+
+            <span class="badge neutral" id="health-status">
+              Checking
+            </span>
+          </a>
+
+          <a href="/readyz" class="check">
+            <div>
+              <span class="check-name">Readiness</span>
+              <span class="check-path">/readyz</span>
+            </div>
+
+            <span class="badge neutral" id="ready-status">
+              Checking
+            </span>
+          </a>
+
+          <a href="/metrics" class="check">
+            <div>
+              <span class="check-name">Prometheus metrics</span>
+              <span class="check-path">/metrics</span>
+            </div>
+
+            <span class="arrow">></span>
+          </a>
+
+          <a href="/meta" class="check">
+            <div>
+              <span class="check-name">Build metadata</span>
+              <span class="check-path">/meta</span>
+            </div>
+
+            <span class="arrow">></span>
+          </a>
+
+          <a href="/api/v1/status" class="check">
+            <div>
+              <span class="check-name">Status API</span>
+              <span class="check-path">/api/v1/status</span>
+            </div>
+
+            <span class="arrow">></span>
+          </a>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <footer>
+      <span>ContainerPulse</span>
+
+      <span>
+        Fastify · Node.js · Docker · GitHub Actions
+      </span>
+    </footer>
+
+  </div>
+
+  <script src="/assets/app.js"></script>
+</body>
+</html>

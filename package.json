@@ -1,11 +1,14 @@
 {
   "name": "js-fastify-blog",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "node --test"
   },
   "dependencies": {
+    "@fastify/static": "^10.1.4",
+    "@prometheus-io/client": "^0.16.1",
     "fastify": "^5.12.5"
   }
 }

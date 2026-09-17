@@ -1,20 +1,33 @@
-const fastify = require('fastify')({ logger: true })
+const { buildApp } = require('./src/app')
 
-fastify.get('/', async () => {
-  return { hello: 'world' }
-})
-
-fastify.get('/health', async () => {
-  return { status: 'ok' }
-})
+const app = buildApp()
 
 const start = async () => {
   try {
-    await fastify.listen({ port: 3000, host: '0.0.0.0' })
-  } catch (err) {
-    fastify.log.error(err)
+    await app.listen({
+      port: Number(process.env.PORT || 3000),
+      host: process.env.HOST || '0.0.0.0'
+    })
+  } catch (error) {
+    app.log.error(error)
     process.exit(1)
   }
 }
+
+const shutdown = async (signal) => {
+  app.log.info({ signal }, 'Graceful shutdown started')
+
+  try {
+    await app.close()
+    app.log.info('Server stopped cleanly')
+    process.exit(0)
+  } catch (error) {
+    app.log.error(error, 'Graceful shutdown failed')
+    process.exit(1)
+  }
+}
+
+process.on('SIGTERM', () => shutdown('SIGTERM'))
+process.on('SIGINT', () => shutdown('SIGINT'))
 
 start()
