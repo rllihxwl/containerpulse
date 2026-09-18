@@ -8,6 +8,10 @@ It provides runtime status, health checks, release metadata, HTTP traffic metric
 
 The project is designed to be easy to deploy on a VPS, home server, NAS or local machine without requiring external databases or infrastructure.
 
+## Dashboard
+
+![ContainerPulse dashboard](docs/dashboard.png)
+
 ## Features
 
 - Web observability dashboard
@@ -288,5 +292,7 @@ The goal is to provide useful service and deployment visibility while remaining 
 
 ## License
 
-No license has been selected yet.
+This project is licensed under the MIT License. See LICENSE for details.
+
+
 
