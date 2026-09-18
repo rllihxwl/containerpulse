@@ -1,13 +1,15 @@
-services:
+﻿services:
   app:
     build:
       context: .
 
+    image: ${CONTAINERPULSE_IMAGE:-containerpulse:local}
+
     ports:
-      - "3000:3000"
+      - "${CONTAINERPULSE_PORT:-3000}:3000"
 
     environment:
-      NODE_ENV: production
+      NODE_ENV: ${NODE_ENV:-production}
 
     restart: unless-stopped
     init: true
@@ -23,8 +25,8 @@ services:
     tmpfs:
       - /tmp:rw,noexec,nosuid,size=16m
 
-    pids_limit: 100
-    mem_limit: 256m
-    cpus: "1.0"
+    pids_limit: ${CONTAINERPULSE_PIDS_LIMIT:-100}
+    mem_limit: ${CONTAINERPULSE_MEMORY_LIMIT:-256m}
+    cpus: "${CONTAINERPULSE_CPU_LIMIT:-1.0}"
 
     stop_grace_period: 10s
