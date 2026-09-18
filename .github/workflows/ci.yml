@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
@@ -41,9 +41,33 @@ jobs:
           node --check src/app.js
           node --check public/app.js
 
-  docker:
+  security:
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Build image for security scan
+        run: docker build -t containerpulse:security-scan .
+
+      - name: Scan container image
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: containerpulse:security-scan
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: HIGH,CRITICAL
+
+  docker:
+    needs:
+      - test
+      - security
+
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
@@ -77,3 +101,6 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ github.sha }}
+
+          sbom: true
+          provenance: mode=max
