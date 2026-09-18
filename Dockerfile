@@ -1,4 +1,13 @@
-FROM node:24-alpine
+FROM node:24-alpine AS dependencies
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci --omit=dev
+
+
+FROM node:24-alpine AS runtime
 
 WORKDIR /app
 
@@ -17,10 +26,12 @@ LABEL org.opencontainers.image.source="https://github.com/rllihxwl/js-fastify-bl
 LABEL org.opencontainers.image.revision=$GIT_SHA
 LABEL org.opencontainers.image.created=$BUILD_DATE
 
-COPY package*.json ./
+RUN apk upgrade --no-cache \
+    && rm -rf /usr/local/lib/node_modules/npm \
+              /usr/local/bin/npm \
+              /usr/local/bin/npx
 
-RUN npm ci --omit=dev
-
+COPY --from=dependencies --chown=node:node /app/node_modules ./node_modules
 COPY --chown=node:node . .
 
 USER node
@@ -30,4 +41,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "fetch('http://127.0.0.1:3000/healthz').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"
 
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
