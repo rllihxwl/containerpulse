@@ -11,6 +11,9 @@ on:
 permissions:
   contents: read
   packages: write
+  id-token: write
+  attestations: write
+  artifact-metadata: write
 
 jobs:
   test:
@@ -88,6 +91,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and publish Docker image
+        id: build
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -104,3 +108,12 @@ jobs:
 
           sbom: true
           provenance: mode=max
+
+      - name: Sign GitHub provenance attestation
+        if: github.event_name == 'push'
+        uses: actions/attest@v4
+        with:
+          subject-name: ghcr.io/${{ github.repository }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+          create-storage-record: false
