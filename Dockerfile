@@ -1,4 +1,4 @@
-FROM node:24-alpine AS dependencies
+﻿FROM node:24-alpine AS dependencies
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ ENV IMAGE_TAG=$IMAGE_TAG
 
 LABEL org.opencontainers.image.title="ContainerPulse"
 LABEL org.opencontainers.image.description="Release-aware service health and deployment observability"
-LABEL org.opencontainers.image.source="https://github.com/rllihxwl/js-fastify-blog-docker"
+LABEL org.opencontainers.image.source="https://github.com/rllihxwl/containerpulse"
 LABEL org.opencontainers.image.revision=$GIT_SHA
 LABEL org.opencontainers.image.created=$BUILD_DATE
 
@@ -42,3 +42,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "fetch('http://127.0.0.1:3000/healthz').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"
 
 CMD ["node", "index.js"]
+
